@@ -28,15 +28,14 @@ app.MapGet("/health", () => Results.Ok(new { status = "Healthy",
 timestamp = DateTime.UtcNow }))
 .WithName("HealthCheck");
 // 2. Endpoints (listing des produits et ajout d’un produit)
-app.MapGet("/api/products", async (AppDbContext db) =>
-await db.Products.AsNoTracking().ToListAsync())
-.WithName("GetAllProducts");
-app.MapPost("/api/products", async (Product product, AppDbContext
-db) =>
+app.MapGet("/api/get-all-products", async (AppDbContext db) =>
+    await db.Products.AsNoTracking().ToListAsync())
+    .WithName("GetAllProducts");
+app.MapPost("/api/create-product", async (Product product, AppDbContext db) =>
 {
-db.Products.Add(product);
-await db.SaveChangesAsync();
-return Results.Created($"/api/products/{product.Id}", product);
+    db.Products.Add(product);
+    await db.SaveChangesAsync();
+    return Results.Created($"/api/create-product/{product.Id}", product);
 }).WithName("CreateProduct");
 
 
